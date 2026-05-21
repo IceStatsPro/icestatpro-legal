@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IceStat Pro — User Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:       #060d1f;
+    --bg2:      #0f172a;
+    --bg3:      #1e293b;
+    --border:   #1e3a5f;
+    --accent:   #6366f1;
+    --green:    #22c55e;
+    --yellow:   #facc15;
+    --purple:   #8b5cf6;
+    --red:      #ef4444;
+    --orange:   #f97316;
+    --blue:     #3b82f6;
+    --text:     #f1f5f9;
+    --muted:    #64748b;
+    --soft:     #94a3b8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, #0a0f2e 0%, #0f172a 60%, #0a1628 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #6366f133 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-emoji { font-size: 52px; display: block; margin-bottom: 12px; }
+  header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #a5b4fc, #818cf8, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p {
+    color: var(--soft);
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  /* ── Plan tabs ── */
+  .plan-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 24px 0;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+  .tab-btn {
+    padding: 8px 20px;
+    border-radius: 99px;
+    border: 1.5px solid var(--border);
+    background: var(--bg2);
+    color: var(--muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+  .tab-btn.active-free   { background: #052e16; border-color: var(--green);  color: var(--green); }
+  .tab-btn.active-adv    { background: #1c1400; border-color: var(--yellow); color: var(--yellow); }
+  .tab-btn.active-prem   { background: #1a0f2e; border-color: var(--purple); color: var(--purple); }
+
+  /* ── Main ── */
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  /* ── Plan sections ── */
+  .plan-section { display: none; }
+  .plan-section.visible { display: block; }
+
+  .plan-header {
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    border: 1.5px solid;
+  }
+  .plan-header.free   { background: #021a0e; border-color: var(--green); }
+  .plan-header.adv    { background: #12100a; border-color: var(--yellow); }
+  .plan-header.prem   { background: #100a1e; border-color: var(--purple); }
+
+  .plan-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .free  .plan-header h2 { color: var(--green); }
+  .adv   .plan-header h2 { color: var(--yellow); }
+  .prem  .plan-header h2 { color: var(--purple); }
+
+  .plan-header p { color: var(--soft); font-size: 13px; line-height: 1.6; }
+
+  .includes-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #1e293b;
+    color: var(--soft);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 32px; }
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Feature cards ── */
+  .feature-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .feature-card:hover { border-color: var(--accent); }
+  .feature-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: var(--soft);
+    line-height: 1.6;
+  }
+
+  /* ── Steps ── */
+  .steps { list-style: none; }
+  .steps li {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #1e293b;
+    font-size: 13.5px;
+    color: var(--soft);
+    align-items: flex-start;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .step-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .steps li b { color: var(--text); }
+
+  /* ── Tips ── */
+  .tip {
+    background: #0a1628;
+    border: 1px solid #1e3a5f;
+    border-left: 3px solid var(--yellow);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--soft);
+    margin: 8px 0;
+  }
+  .tip b { color: var(--yellow); }
+
+  .alert {
+    background: #1a0f0f;
+    border: 1px solid #7f1d1d;
+    border-left: 3px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--soft);
+    margin: 8px 0;
+  }
+
+  .success {
+    background: #021a0e;
+    border: 1px solid #14532d;
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--soft);
+    margin: 8px 0;
+  }
+  .success b { color: var(--green); }
+
+  /* ── Pricing table ── */
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .pricing-table th {
+    background: #1e1b4b;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--soft);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .pricing-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--soft);
+  }
+  .pricing-table tr:last-child td { border-bottom: none; }
+  .pricing-table tr:nth-child(even) td { background: #0a1220; }
+  .pricing-table .adv-price  { color: var(--yellow); font-weight: 700; }
+  .pricing-table .prem-price { color: var(--purple); font-weight: 700; }
+  .pricing-table .dur        { color: var(--text); }
+
+  /* ── Feature comparison ── */
+  .compare-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-row .feat-name { color: var(--soft); flex: 1; }
+  .compare-row .chips { display: flex; gap: 6px; }
+  .chip {
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 99px;
+  }
+  .chip.free { background: #052e16; color: var(--green); border: 1px solid var(--green); }
+  .chip.adv  { background: #1c1400; color: var(--yellow); border: 1px solid var(--yellow); }
+  .chip.prem { background: #1a0f2e; color: var(--purple); border: 1px solid var(--purple); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    header h1 { font-size: 24px; }
+    .tab-btn { padding: 7px 14px; font-size: 12px; }
+    .compare-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <span class="header-emoji">🎣</span>
+  <h1>IceStat Pro</h1>
+  <p>Your intelligent fish tracking companion · User Guide</p>
+</header>
+
+<!-- ── Plan Tabs ── -->
+<div class="plan-tabs">
+  <button class="tab-btn active-free" onclick="showPlan('free', this)">🆓 Free</button>
+  <button class="tab-btn" onclick="showPlan('adv', this)">⭐ Advanced</button>
+  <button class="tab-btn" onclick="showPlan('prem', this)">👑 Premium</button>
+  <button class="tab-btn" onclick="showPlan('compare', this)">📊 Compare</button>
+  <button class="tab-btn" onclick="showPlan('pricing', this)">💰 Pricing</button>
+</div>
+
+<main>
+
+  <!-- ══════════════════════════════════════════
+       FREE PLAN
+  ══════════════════════════════════════════ -->
+  <div class="plan-section free visible" id="plan-free">
+    <div class="plan-header free">
+      <h2>🆓 Free Plan</h2>
+      <p>The essentials to get you started — track fish appearances and see what's coming next. No payment required.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Getting Started</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Open Telegram → search <b>@IceStatProBot</b></span></li>
+        <li><span class="step-num">2</span><span>Tap <b>/start</b> → tap <b>Open IceStat Pro</b></span></li>
+        <li><span class="step-num">3</span><span>The app loads — you are on the Free plan by default</span></li>
+        <li><span class="step-num">4</span><span>Tap the <b>⏱ Session</b> tab → enter a name (optional) → tap <b>▶ Start Session</b></span></li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Features Available</div>
+
+      <div class="feature-card">
+        <h3>🐟 Next Fish Card</h3>
+        <p>Shows which fish colour is estimated to appear next and at what time. Refreshes automatically every minute.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🔴 🟠 🔵 Fish Log Buttons</h3>
+        <p>Three colour buttons on the main screen. Tap the matching colour the moment you spot a fish. Logging is only active during a session.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📋 Personal Log View</h3>
+        <p>Scroll down to see your recent logged entries. Each entry shows the fish colour and exact time it was logged. Tap <b>✕</b> on any entry to remove it if logged by mistake.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>⏱ Session Tracking</h3>
+        <p>Start and end sessions to organise your fishing activity. All logs must be inside an active session to count.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">How to Log a Fish</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Make sure a session is active (green indicator in Session tab)</span></li>
+        <li><span class="step-num">2</span><span>When you spot a fish, <b>tap its colour button immediately</b></span></li>
+        <li><span class="step-num">3</span><span>The entry is saved with the current time</span></li>
+        <li><span class="step-num">4</span><span>The Next Fish card updates to reflect your new log</span></li>
+      </ol>
+      <div class="tip"><b>Tip:</b> Log the fish the moment you see it — even a 30-second delay affects timing accuracy.</div>
+      <div class="alert">If you log by mistake, scroll down in the log and tap the <b>✕</b> button to remove it before ending the session.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Ending a Session</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Tap the <b>⏱ Session</b> tab</span></li>
+        <li><span class="step-num">2</span><span>Tap <b>⏹ End Session</b></span></li>
+        <li><span class="step-num">3</span><span>Your session data is saved locally</span></li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Upgrading Your Plan</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Tap <b>⭐ Upgrade Plan</b> button in the top right corner</span></li>
+        <li><span class="step-num">2</span><span>Select <b>Advanced</b> or <b>Premium</b> tab</span></li>
+        <li><span class="step-num">3</span><span>Choose a duration and tap <b>💰 Pay via UPI</b> or <b>⭐ Stars</b></span></li>
+        <li><span class="step-num">4</span><span>Complete payment and send screenshot to admin</span></li>
+        <li><span class="step-num">5</span><span>Admin grants access — tap 🔄 to refresh</span></li>
+      </ol>
+      <div class="tip"><b>Note:</b> The 24-hour Trial pack can be activated only once per account. Choose wisely — consider Premium Trial to experience all features.</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ADVANCED PLAN
+  ══════════════════════════════════════════ -->
+  <div class="plan-section adv" id="plan-adv">
+    <div class="plan-header adv">
+      <h2>⭐ Advanced Plan</h2>
+      <p>Unlock the full analysis toolkit — heatmap, activity queue, session history, data export and personal analytics.</p>
+      <span class="includes-badge">✅ Includes everything in Free</span>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Additional Features</div>
+
+      <div class="feature-card">
+        <h3>📡 Activity Feed (Queue)</h3>
+        <p>Shows all 3 fish ranked by next expected appearance. Each card displays the estimated time, window range, and pattern strength score. The most imminent fish sits at the top.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🔥 Heatmap Tab</h3>
+        <p>A minute-by-minute frequency map from :00 to :59. Brighter/coloured cells mean fish appeared more often at that minute historically. Outlined cells show currently active hot minute slots. Scroll left/right to see the full 60-minute view.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>⏱ Session History Tab</h3>
+        <p>Full list of all your past sessions with start time, end time and total duration. Helps you identify your most productive fishing windows.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📤 Export Data</h3>
+        <p>Tap <b>Export</b> in the Log tab to download your full fish log as a CSV file. Useful for personal record keeping or sharing with others.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📥 Import Data</h3>
+        <p>Tap <b>Import</b> to restore a previously exported CSV file back into the app. Useful if you reset the app or switch devices.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🔬 Analyze Data</h3>
+        <p>Tap the <b>ANALYZE DATA</b> button in the Log tab. It syncs your entries to the central database for admin review and shows your personal stats:</p>
+        <p style="margin-top:8px;">• Total fish logged (all colours)<br>• Per fish: count + peak activity hour</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">How to Read the Heatmap</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Tap the <b>🔥 Heat</b> tab</span></li>
+        <li><span class="step-num">2</span><span>The map scrolls to the current minute automatically</span></li>
+        <li><span class="step-num">3</span><span><b>Coloured cells</b> = historically active minutes for that fish</span></li>
+        <li><span class="step-num">4</span><span><b>Bordered cells</b> = currently active hot windows</span></li>
+        <li><span class="step-num">5</span><span><b>White outline</b> = current minute · <b>Yellow outline</b> = next minute</span></li>
+      </ol>
+      <div class="tip"><b>Tip:</b> Watch for clusters of coloured cells — a cluster of 3–4 consecutive minutes means fish appear reliably in that window.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Submitting Data for Approval</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>After a session, tap <b>🔬 ANALYZE DATA</b></span></li>
+        <li><span class="step-num">2</span><span>Your entries are sent to the admin queue for review</span></li>
+        <li><span class="step-num">3</span><span>Once approved, they improve the central analysis model</span></li>
+      </ol>
+      <div class="success"><b>Thank you:</b> Your approved entries improve accuracy for everyone.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Managing Your Plan</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Tap <b>🔄 Manage Plan</b> in the top right corner</span></li>
+        <li><span class="step-num">2</span><span>Your current plan and expiry are shown at the top</span></li>
+        <li><span class="step-num">3</span><span>Switch to <b>Premium</b> tab to upgrade</span></li>
+        <li><span class="step-num">4</span><span>Renew by selecting the same or longer duration</span></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PREMIUM PLAN
+  ══════════════════════════════════════════ -->
+  <div class="plan-section prem" id="plan-prem">
+    <div class="plan-header prem">
+      <h2>👑 Premium Plan</h2>
+      <p>The complete IceStat Pro experience. Real-time burst detection, state badges, in-app alerts and background Watch Mode notifications.</p>
+      <span class="includes-badge">✅ Includes everything in Free and Advanced</span>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Exclusive Premium Features</div>
+
+      <div class="feature-card">
+        <h3>⚡ Burst Mode Banner</h3>
+        <p>A live banner at the top of the screen shows the current fish activity state:<br>
+        <b style="color:#22c55e;">⚡ BURST MODE</b> — fish are appearing rapidly, stay alert and log every sighting.<br>
+        <b style="color:#64748b;">💤 REST MODE</b> — fish activity is low, relax between sessions.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🏷️ State Badges in Queue</h3>
+        <p>Each fish card in the Activity Feed shows its real-time state:<br>
+        <b style="color:#22c55e;">⚡ BURST</b> — this fish is in an active burst cycle, expect rapid appearances.<br>
+        <b style="color:#64748b;">💤 REST</b> — this fish is resting, next appearance is further away.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📊 Two-State Hint</h3>
+        <p>Below the estimated time on the hero card, you'll see both state estimates simultaneously:<br>
+        <b style="color:#22c55e;">⚡ Burst ~4m</b> — expected gap if currently in burst mode<br>
+        <b style="color:#64748b;">💤 Rest ~25m</b> — expected gap if currently in rest mode</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🔔 In-App Burst Alert</h3>
+        <p>When any fish transitions from Rest → Burst, the app automatically:<br>
+        • Vibrates your phone<br>
+        • Plays a 3-tone alert sound<br>
+        • Shows a green animated banner<br><br>
+        This tells you to start watching immediately. There is a 5-minute cooldown per fish to avoid repeated alerts.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>👁️ Watch Mode (Background Notifications)</h3>
+        <p>Get Telegram notifications even when the app is closed:</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Setting Up Watch Mode</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Tap the <b>🔔</b> button in the top bar</span></li>
+        <li><span class="step-num">2</span><span>Watch Mode activates — the button turns green</span></li>
+        <li><span class="step-num">3</span><span>Close IceStat Pro and go about your day</span></li>
+        <li><span class="step-num">4</span><span>When a fish enters Burst Mode, you receive a <b>Telegram message instantly</b></span></li>
+        <li><span class="step-num">5</span><span>Tap the notification to open IceStat Pro directly</span></li>
+      </ol>
+      <div class="tip"><b>Best practice:</b> Enable Watch Mode during long breaks between fishing sessions so you never miss a burst window.</div>
+      <div class="tip"><b>Battery note:</b> Watch Mode uses Telegram's own notification system — it does not drain your battery like a background app.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tips for Premium Users</div>
+      <div class="tip"><b>During Burst Mode:</b> Log every fish you see — the more data during bursts, the more accurate future burst detection improve.</div>
+      <div class="tip"><b>Rest periods:</b> When 💤 REST is shown, use the two-state hint to decide whether to keep watching or take a break.</div>
+      <div class="tip"><b>Watch Mode + Burst:</b> Enable Watch Mode before stepping away. You'll be back exactly when burst begins.</div>
+      <div class="success"><b>Model switching:</b> As an Advanced/Premium user, you can see the admin switch between analysis models (V2 and V3). V3 is the recommended default — it uses minute-pattern analysis based on all historical data.</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       COMPARE
+  ══════════════════════════════════════════ -->
+  <div class="plan-section" id="plan-compare">
+    <div class="section">
+      <div class="section-title">Feature Comparison</div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+
+        <div class="compare-row" style="background:#0a0f1e;padding:12px 14px;">
+          <span class="feat-name" style="color:var(--muted);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Feature</span>
+          <div class="chips">
+            <span class="chip free">Free</span>
+            <span class="chip adv">Adv</span>
+            <span class="chip prem">Prem</span>
+          </div>
+        </div>
+
+        <!-- Basics -->
+        <div class="compare-row"><span class="feat-name">Next fish time estimate</span><div class="chips"><span class="chip free">✓</span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Fish log buttons (Red/Orange/Blue)</span><div class="chips"><span class="chip free">✓</span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Session start / end</span><div class="chips"><span class="chip free">✓</span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Personal log view</span><div class="chips"><span class="chip free">✓</span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Delete entry from log</span><div class="chips"><span class="chip free">✓</span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+
+        <!-- Advanced -->
+        <div class="compare-row"><span class="feat-name">Activity Feed / Queue (all 3 fish)</span><div class="chips"><span style="width:36px"></span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Window range (P20–P80)</span><div class="chips"><span style="width:36px"></span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Heatmap tab</span><div class="chips"><span style="width:36px"></span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Session history tab</span><div class="chips"><span style="width:36px"></span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Export to CSV</span><div class="chips"><span style="width:36px"></span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Import CSV</span><div class="chips"><span style="width:36px"></span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Analyze Data (personal stats)</span><div class="chips"><span style="width:36px"></span><span class="chip adv">✓</span><span class="chip prem">✓</span></div></div>
+
+        <!-- Premium -->
+        <div class="compare-row"><span class="feat-name">Burst Mode banner</span><div class="chips"><span style="width:36px"></span><span style="width:36px"></span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">State badges in queue (⚡/💤)</span><div class="chips"><span style="width:36px"></span><span style="width:36px"></span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Two-state hint (burst/rest times)</span><div class="chips"><span style="width:36px"></span><span style="width:36px"></span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">In-app burst alert (vibration + sound)</span><div class="chips"><span style="width:36px"></span><span style="width:36px"></span><span class="chip prem">✓</span></div></div>
+        <div class="compare-row"><span class="feat-name">Watch Mode (background notifications)</span><div class="chips"><span style="width:36px"></span><span style="width:36px"></span><span class="chip prem">✓</span></div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">General Tips</div>
+      <div class="tip"><b>Always start a session</b> — fish logs only count when a session is active.</div>
+      <div class="tip"><b>Log immediately</b> — tap the button the moment you see the fish.</div>
+      <div class="tip"><b>More data = better insights</b> — the model improves with every approved entry.</div>
+      <div class="tip"><b>Refresh if stale</b> — tap 🔄 in the top bar to reload your role and latest insights.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Getting Help</div>
+      <div class="feature-card">
+        <h3>🤖 Bot Commands</h3>
+        <p>
+          <code style="color:var(--green);">/start</code> — Open IceStat Pro<br>
+          <code style="color:var(--green);">/myplan</code> — Check your current plan and expiry<br>
+          <code style="color:var(--green);">/pay</code> — View payment options<br>
+          <code style="color:var(--green);">/help</code> — Full list of commands
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PRICING
+  ══════════════════════════════════════════ -->
+  <div class="plan-section" id="plan-pricing">
+    <div class="section">
+      <div class="section-title">Subscription Plans</div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th style="color:var(--yellow);">⭐ Advanced</th>
+            <th style="color:var(--purple);">👑 Premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="dur">Trial (24 hours)</td><td class="adv-price">₹399</td><td class="prem-price">₹799</td></tr>
+          <tr><td class="dur">Monthly</td><td class="adv-price">₹2,499</td><td class="prem-price">₹4,999</td></tr>
+          <tr><td class="dur">Quarterly</td><td class="adv-price">₹5,999</td><td class="prem-price">₹12,999</td></tr>
+          <tr><td class="dur">Half Yearly</td><td class="adv-price">₹10,999</td><td class="prem-price">₹25,999</td></tr>
+          <tr><td class="dur">Annual</td><td class="adv-price">₹19,999</td><td class="prem-price">₹49,999</td></tr>
+          <tr><td class="dur">Lifetime</td><td class="adv-price">₹49,999</td><td class="prem-price">₹99,999</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">How to Pay</div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Tap <b>⭐ Upgrade Plan</b> or <b>🔄 Manage Plan</b> in the top bar</span></li>
+        <li><span class="step-num">2</span><span>Select your tier: <b>Advanced</b> or <b>Premium</b></span></li>
+        <li><span class="step-num">3</span><span>Choose a duration and tap <b>💰 Pay via UPI</b></span></li>
+        <li><span class="step-num">4</span><span>Copy the UPI ID shown on screen and complete the payment</span></li>
+        <li><span class="step-num">5</span><span>Take a screenshot of the payment confirmation</span></li>
+        <li><span class="step-num">6</span><span>Upload the screenshot in the app when prompted</span></li>
+        <li><span class="step-num">7</span><span>Admin reviews and grants access — usually within a few hours</span></li>
+        <li><span class="step-num">8</span><span>Tap 🔄 to refresh and activate your new plan</span></li>
+      </ol>
+      <div class="tip"><b>Telegram Stars:</b> You can also pay using Telegram Stars directly inside the app. Stars payment is instant — no screenshot needed.</div>
+      <div class="alert"><b>Trial Policy:</b> The 24-hour trial can only be activated <b>once per account</b>. Consider the Premium Trial (₹799) to experience all features including Burst Mode before committing.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Refund &amp; Support</div>
+      <div class="feature-card">
+        <h3>💬 Contact Admin</h3>
+        <p>For payment issues, refund requests, or plan disputes, use <code style="color:var(--green);">/paysupport</code> in the bot or message <b>@IceStatProBot</b> directly.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>IceStat Pro · <a href="#">@IceStatProBot</a> · Guide last updated May 2026</p>
+  <p style="margin-top:6px;">Use <code style="color:#6366f1;">/privacy</code> or <code style="color:#6366f1;">/terms</code> in the bot for legal policies.</p>
+</footer>
+
+<script>
+function showPlan(plan, btn) {
+  // Hide all
+  document.querySelectorAll('.plan-section').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.className = 'tab-btn');
+
+  // Show selected
+  document.getElementById('plan-' + plan).classList.add('visible');
+  btn.classList.add('active-' + plan);
+
+  // Scroll to top of main
+  document.querySelector('main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
